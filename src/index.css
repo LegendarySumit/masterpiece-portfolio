@@ -1,0 +1,54 @@
+﻿@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", "Inter", "sans-serif";
+  --font-mono: "JetBrains Mono", "monospace";
+}
+
+@layer base {
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+    background-color: #020202;
+    color: white;
+    font-family: "Poppins", "Inter", sans-serif;
+  }
+}
+
+/* Lenis Recommended CSS */
+html.lenis {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.glass-panel {
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* WebKit Typography Magic (for hover states) */
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
