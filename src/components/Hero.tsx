@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { gsap } from "gsap";
 import {
   FiFileText,
@@ -13,24 +13,31 @@ export default function Hero() {
   const audioRef = useRef<HTMLAudioElement>(null);
   const charRefs = useRef<HTMLSpanElement[]>([]);
   const [isPlaying, setIsPlaying] = useState(false);
-
-  // Playlist
-  const playlist = [
-    {
-      name: "SPACE ATMOSPHERE 001",
-      file: "audiopapkin-ambient-soundscapes-001-space-atmosphere-303246.mp3",
-    },
-    {
-      name: "SPACE ATMOSPHERE 003",
-      file: "audiopapkin-ambient-soundscapes-003-space-atmosphere-303242.mp3",
-    },
-    {
-      name: "SPACE ATMOSPHERE 007",
-      file: "audiopapkin-ambient-soundscapes-007-space-atmosphere-304974.mp3",
-    },
-    { name: "SPACE CHORDS LOOP", file: "idoberg-space-chords-loop-310493.mp3" },
-  ];
   const [currentTrackIndex, setCurrentTrackIndex] = useState(0);
+  const shouldPlayRef = useRef(false);
+
+  // Playlist - memoized to avoid dependency changes
+  const playlist = useMemo(
+    () => [
+      {
+        name: "Cosmic Dreams",
+        file: "audiopapkin-ambient-soundscapes-001-space-atmosphere-303246.mp3",
+      },
+      {
+        name: "Stellar Voyage",
+        file: "audiopapkin-ambient-soundscapes-003-space-atmosphere-303242.mp3",
+      },
+      {
+        name: "Nebula Whispers",
+        file: "audiopapkin-ambient-soundscapes-007-space-atmosphere-304974.mp3",
+      },
+      {
+        name: "Infinite Horizons",
+        file: "idoberg-space-chords-loop-310493.mp3",
+      },
+    ],
+    [],
+  );
 
   const nameLine1 = "SUMIT KUMAR".split("");
   const nameLine2 = "PRUSTY".split("");
@@ -76,46 +83,72 @@ export default function Hero() {
     return () => ctx.revert();
   }, []);
 
+  // Handle track changes - always load, but only auto-play if flagged
+  useEffect(() => {
+    if (audioRef.current) {
+      const trackFile = playlist[currentTrackIndex]?.file;
+      if (trackFile) {
+        audioRef.current.src = `/${trackFile}`;
+        audioRef.current.load();
+
+        // Auto-play only if this is a track change (next/prev), not initial load
+        if (shouldPlayRef.current) {
+          const playPromise = audioRef.current.play();
+          if (playPromise !== undefined) {
+            playPromise
+              .then(() => {
+                setIsPlaying(true);
+                shouldPlayRef.current = false;
+              })
+              .catch(() => {
+                setIsPlaying(true);
+                shouldPlayRef.current = false;
+              });
+          }
+        }
+      }
+    }
+  }, [currentTrackIndex, playlist]);
+
   // Audio controls
   const togglePlay = () => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        setIsPlaying(false);
       } else {
-        audioRef.current.play();
+        // Make sure the audio has a source before playing
+        if (!audioRef.current.src) {
+          audioRef.current.src = `/${playlist[currentTrackIndex].file}`;
+          audioRef.current.load();
+        }
+        const playPromise = audioRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => {
+              setIsPlaying(true);
+            })
+            .catch(() => {
+              setIsPlaying(true);
+            });
+        } else {
+          setIsPlaying(true);
+        }
       }
-      setIsPlaying(!isPlaying);
     }
   };
 
-  const handleSkipBack = () => {
-    if (audioRef.current) {
-      audioRef.current.currentTime = Math.max(
-        0,
-        audioRef.current.currentTime - 5,
-      );
-    }
+  const handlePrevTrack = () => {
+    const prevIndex =
+      (currentTrackIndex - 1 + playlist.length) % playlist.length;
+    setCurrentTrackIndex(prevIndex);
+    shouldPlayRef.current = true; // Flag to auto-play previous track
   };
 
   const handleNextTrack = () => {
     const nextIndex = (currentTrackIndex + 1) % playlist.length;
     setCurrentTrackIndex(nextIndex);
-    if (isPlaying && audioRef.current) {
-      audioRef.current.src = `/${playlist[nextIndex].file}`;
-      audioRef.current.play();
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    // Audio time update
-  };
-
-  const handleLoadedMetadata = () => {
-    // Metadata loaded
-  };
-
-  const handleTrackEnd = () => {
-    handleNextTrack();
+    shouldPlayRef.current = true; // Flag to auto-play next track
   };
 
   const renderChars = (chars: string[], colorClass: string) => (
@@ -189,10 +222,11 @@ export default function Hero() {
         {/* Audio Element */}
         <audio
           ref={audioRef}
-          src={`/${playlist[currentTrackIndex].file}`}
-          onTimeUpdate={handleTimeUpdate}
-          onLoadedMetadata={handleLoadedMetadata}
-          onEnded={handleTrackEnd}
+          onEnded={() => {
+            const nextIndex = (currentTrackIndex + 1) % playlist.length;
+            setCurrentTrackIndex(nextIndex);
+            shouldPlayRef.current = true; // Auto-play next track when current ends
+          }}
         />
 
         {/* Role Text - Shown above music player on small screens (<1024px) */}
@@ -218,13 +252,15 @@ export default function Hero() {
           {/* Player Controls Row */}
           <div className="flex items-center gap-2.5 justify-center">
             <button
-              onClick={handleSkipBack}
+              onClick={handlePrevTrack}
+              title="Previous Track"
               className="hover:text-[#00F0FF] transition-colors shrink-0"
             >
               <FiSkipBack size={12} className="w-4 h-4" />
             </button>
             <button
               onClick={togglePlay}
+              title={isPlaying ? "Pause" : "Play"}
               className="hover:text-white transition-colors shrink-0"
             >
               {isPlaying ? (
@@ -235,6 +271,7 @@ export default function Hero() {
             </button>
             <button
               onClick={handleNextTrack}
+              title="Next Track"
               className="hover:text-[#00F0FF] transition-colors shrink-0"
             >
               <FiSkipForward size={12} className="w-4 h-4" />
@@ -254,13 +291,12 @@ export default function Hero() {
         {/* Resume */}
         <a
           href="/resume.pdf"
-          className="resume-btn flex items-center gap-2.5 text-gray-400 hover:text-white font-sans font-semibold text-xs lg:text-sm tracking-[0.15em] md:tracking-[0.2em] group transition-colors whitespace-nowrap"
+          className="resume-btn flex items-center gap-2.5 text-gray-400 hover:text-white font-sans font-semibold text-xs sm:text-sm lg:text-base tracking-[0.15em] md:tracking-[0.2em] group transition-colors whitespace-nowrap"
         >
-          <span className="hidden sm:inline">RESUME</span>
-          <span className="sm:hidden">CV</span>
+          <span>RESUME</span>
           <FiFileText
-            size={11}
-            className="text-gray-400 group-hover:text-[#00F0FF] transition-colors shrink-0"
+            size={14}
+            className="text-gray-400 group-hover:text-[#00F0FF] transition-colors shrink-0 w-4 h-4 sm:w-5 sm:h-5"
           />
         </a>
       </div>
