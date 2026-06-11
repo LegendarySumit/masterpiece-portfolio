@@ -156,30 +156,30 @@ export default function About({
       <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#B200FF]/10 rounded-full blur-3xl pointer-events-none opacity-20 -z-10" />
       <div className="absolute bottom-1/3 left-1/3 w-96 h-96 bg-[#00F0FF]/10 rounded-full blur-3xl pointer-events-none opacity-20 -z-10" />
 
-      <div className="px-6 md:px-12 lg:px-24">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-24">
         {/* Header */}
-        <div className="mb-16 md:mb-20">
-          <span className="text-[#00F0FF] font-mono text-sm tracking-widest mb-4 block uppercase">
+        <div className="mb-12 sm:mb-16 md:mb-20">
+          <span className="text-[#00F0FF] font-mono text-xs sm:text-sm tracking-widest mb-3 sm:mb-4 block uppercase">
             // About Me
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#00F0FF] to-[#B200FF] tracking-tight mb-4">
             Turning Ideas Into Code
           </h2>
-          <p className="text-white/60 font-light max-w-2xl">
+          <p className="text-white/60 font-light max-w-2xl text-sm sm:text-base">
             A 3rd year engineering student passionate about backend engineering
             and software development.
           </p>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-10 md:gap-12 lg:gap-16 mb-16 sm:mb-20">
           {/* Left: About Text */}
           <motion.div
             style={{ opacity, y }}
             className="flex flex-col justify-center"
             ref={textRef}
           >
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-5 md:space-y-6">
               {[
                 "I'm a 3rd year engineering student with a strong passion for software development and backend engineering. My journey in tech started with web development, where I built interactive projects and experimented with creative solutions.",
                 "Over time, I shifted my focus toward Python, backend technologies, and system design. Now, I'm deeply invested in strengthening my core fundamentals—Python, APIs, databases, SQL, and software engineering principles.",
@@ -188,7 +188,7 @@ export default function About({
               ].map((text, index) => (
                 <p
                   key={index}
-                  className="text-line text-white/70 leading-relaxed text-lg font-light"
+                  className="text-line text-white/70 leading-relaxed text-sm sm:text-base md:text-lg font-light"
                 >
                   {text}
                 </p>
@@ -196,7 +196,7 @@ export default function About({
             </div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-4 mt-10">
+            <div className="flex flex-wrap gap-3 sm:gap-4 mt-8 sm:mt-10">
               <motion.a
                 href="https://www.linkedin.com/in/sumit-kumar-prusty-5aa934332"
                 target="_blank"
@@ -219,13 +219,13 @@ export default function About({
           </motion.div>
 
           {/* Right: Journey Timeline */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-5 md:space-y-6">
             {journeySteps.map((step, index) => {
               const IconComponent = step.icon;
               return (
                 <motion.div
                   key={index}
-                  className="journey-card group relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-6 hover:border-white/50 transition-all duration-500 overflow-hidden"
+                  className="journey-card group relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-4 sm:p-5 md:p-6 hover:border-white/50 transition-all duration-500 overflow-hidden"
                   style={{
                     boxShadow: `0 0 40px ${step.color}15, inset 0 0 20px ${step.color}10`,
                   }}
@@ -241,19 +241,19 @@ export default function About({
 
                   {/* Content */}
                   <div className="relative z-10">
-                    <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-start justify-between mb-2 sm:mb-3">
                       <div>
-                        <h3 className="text-2xl font-black text-white mb-1 flex items-center gap-3">
-                          <IconComponent className="text-xl" />
+                        <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white mb-1 flex items-center gap-2 sm:gap-3">
+                          <IconComponent className="text-base sm:text-lg md:text-xl" />
                           {step.phase}
                         </h3>
-                        <p className="text-sm font-mono text-white/60">
+                        <p className="text-xs sm:text-sm font-mono text-white/60">
                           {step.year}
                         </p>
                       </div>
                     </div>
 
-                    <p className="text-white/70 leading-relaxed text-sm">
+                    <p className="text-white/70 leading-relaxed text-xs sm:text-sm">
                       {step.description}
                     </p>
 
@@ -271,26 +271,26 @@ export default function About({
 
         {/* Facts Section */}
         <motion.div
-          className="mt-20 md:mt-32"
+          className="mt-16 sm:mt-20 md:mt-32"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           viewport={{ once: true, margin: "-100px" }}
         >
-          <div className="mb-12">
-            <span className="text-[#B200FF] font-mono text-sm tracking-widest mb-4 block uppercase">
+          <div className="mb-8 sm:mb-10 md:mb-12 text-center">
+            <span className="text-[#B200FF] font-mono text-xs sm:text-sm tracking-widest mb-3 sm:mb-4 block uppercase">
               // Quick Facts
             </span>
-            <h3 className="text-3xl md:text-4xl font-black text-white tracking-tight">
+            <h3 className="text-2xl sm:text-3xl md:text-3xl lg:text-4xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#00F0FF] to-[#B200FF] tracking-tight">
               By The Numbers
             </h3>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 px-2 sm:px-0">
             {facts.map((fact, index) => (
               <motion.div
                 key={index}
-                className="fact-card relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-6 text-center hover:border-white/50 transition-all duration-500 group"
+                className="fact-card relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-3 sm:p-4 md:p-6 text-center hover:border-white/50 transition-all duration-500 group"
                 style={{
                   boxShadow: `0 0 40px ${index % 2 === 0 ? "#00F0FF" : "#B200FF"}15, inset 0 0 20px ${index % 2 === 0 ? "#00F0FF" : "#B200FF"}10`,
                 }}
@@ -305,15 +305,17 @@ export default function About({
 
                 <div className="relative z-10">
                   <motion.p
-                    className="text-3xl md:text-4xl font-black text-white mb-2"
+                    className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black text-white mb-1 sm:mb-2"
                     whileHover={{ scale: 1.1 }}
                   >
                     {fact.value}
                   </motion.p>
-                  <p className="text-sm font-mono uppercase tracking-wider text-white/60 mb-1">
+                  <p className="text-[10px] sm:text-xs md:text-sm font-mono uppercase tracking-wider text-white/60 mb-0.5 sm:mb-1 leading-tight">
                     {fact.label}
                   </p>
-                  <p className="text-xs text-white/40">{fact.subtext}</p>
+                  <p className="text-[8px] sm:text-[10px] md:text-xs text-white/40 leading-tight">
+                    {fact.subtext}
+                  </p>
                 </div>
               </motion.div>
             ))}
@@ -322,7 +324,7 @@ export default function About({
 
         {/* Core Focus Area */}
         <motion.div
-          className="mt-20 md:mt-32 relative rounded-2xl border border-white/20 bg-linear-to-br from-black/50 to-black/30 backdrop-blur-xl p-8 md:p-12 overflow-hidden"
+          className="mt-16 sm:mt-20 md:mt-32 relative rounded-2xl border border-white/20 bg-linear-to-br from-black/50 to-black/30 backdrop-blur-xl p-4 sm:p-6 md:p-8 lg:p-12 overflow-hidden"
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
@@ -340,26 +342,25 @@ export default function About({
             />
           </div>
 
-          <div className="relative z-10">
-            <div className="flex items-center gap-4 mb-4">
-              <FaCog className="text-3xl text-[#00F0FF]" />
-              <h3 className="text-2xl md:text-3xl font-black text-white">
+          <div className="relative z-10 text-center">
+            <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+              <h3 className="text-xl sm:text-2xl md:text-2xl lg:text-3xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#00F0FF] to-[#B200FF]">
                 Core Focus Right Now
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7 md:gap-8 mt-6 sm:mt-8">
               {focusAreas.map((item, index) => {
                 const IconComponent = item.icon;
                 return (
                   <motion.div
                     key={index}
-                    className="flex gap-4"
+                    className="flex gap-3 sm:gap-4"
                     whileHover={{ x: 10 }}
                   >
-                    <IconComponent className="text-3xl text-[#00F0FF] flex-shrink-0" />
-                    <div>
-                      <h4 className="text-white font-bold mb-2">
+                    <IconComponent className="text-2xl sm:text-3xl text-[#00F0FF] shrink-0" />
+                    <div className="text-left">
+                      <h4 className="text-white font-bold text-sm sm:text-base mb-1 sm:mb-2">
                         {item.title}
                       </h4>
                       <p className="text-white/60 text-sm">{item.desc}</p>

@@ -1,6 +1,7 @@
 interface BadgeProps {
   label: string;
   variant?: "primary" | "secondary";
+  className?: string;
 }
 
 export default function Badge({ label, variant = "primary" }: BadgeProps) {
@@ -11,7 +12,7 @@ export default function Badge({ label, variant = "primary" }: BadgeProps) {
 
   return (
     <div
-      className={`inline-block px-4 py-2 rounded-full border font-mono text-xs uppercase tracking-widest ${bgColor} transition-all duration-300 hover:scale-105`}
+      className={`inline-block px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border font-mono text-[0.65rem] sm:text-xs uppercase tracking-widest ${bgColor} transition-all duration-300 hover:scale-105 whitespace-nowrap`}
     >
       {label}
     </div>

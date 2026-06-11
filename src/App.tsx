@@ -35,13 +35,13 @@ function App() {
         {/* Dynamic Background Dimmer for Terminal Zone */}
         <motion.div
           style={{ opacity: bgDimmerOpacity }}
-          className="fixed inset-0 z-[5] pointer-events-none bg-[#020202]"
+          className="fixed inset-0 z-5 pointer-events-none bg-[#020202]"
         />
 
-        <div className="relative z-10 w-full min-h-screen pt-12 md:pt-20 lg:pt-0 pointer-events-auto">
+        <div className="relative z-10 w-full min-h-screen pt-12 sm:pt-16 md:pt-20 lg:pt-0 pointer-events-auto">
           <Navbar onOpenContact={() => setIsContactModalOpen(true)} />
 
-          <main className="container mx-auto px-6 md:px-12 lg:px-24">
+          <main className="w-full px-4 sm:px-6 md:px-12 lg:px-24">
             <Hero />
             <About onOpenContact={() => setIsContactModalOpen(true)} />
             <Projects />
@@ -50,22 +50,24 @@ function App() {
             <Experience />
           </main>
 
-          <footer className="w-full border-t border-white/5 py-12 flex flex-col items-center justify-center text-gray-500 font-mono text-xs tracking-widest relative z-10 pointer-events-auto">
-            <div className="flex gap-6 mb-6">
+          <footer className="w-full border-t border-white/5 py-8 sm:py-10 md:py-12 px-4 sm:px-6 flex flex-col items-center justify-center text-gray-500 font-mono text-[0.65rem] sm:text-xs tracking-widest relative z-10 pointer-events-auto">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 mb-6 text-center">
               <a
                 href="https://github.com/LegendarySumit"
-                className="hover:text-white transition-colors"
+                className="hover:text-white transition-colors whitespace-nowrap"
               >
                 GITHUB
               </a>
               <a
                 href="mailto:prustysumit78@gmail.com"
-                className="hover:text-[#00F0FF] transition-colors"
+                className="hover:text-[#00F0FF] transition-colors whitespace-nowrap"
               >
                 EMAIL
               </a>
             </div>
-            <p>© 2026 SUMIT KUMAR PRUSTY // ALL RIGHTS RESERVED</p>
+            <p className="text-center wrap-break-word sm:break-normal">
+              © 2026 SUMIT KUMAR PRUSTY // ALL RIGHTS RESERVED
+            </p>
           </footer>
         </div>
 

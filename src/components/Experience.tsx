@@ -88,12 +88,12 @@ export default function Experience() {
         gsap.from(card as HTMLElement, {
           opacity: 0,
           y: 40, // Changed from x to y for a cleaner grid staggered reveal
-          duration: 0.6,
-          delay: index * 0.1,
+          duration: 0.4,
+          delay: index * 0.06,
           ease: "power3.out",
           scrollTrigger: {
             trigger: card as HTMLElement,
-            start: "top 85%",
+            start: "top 88%",
             once: true,
           },
         });
@@ -113,14 +113,14 @@ export default function Experience() {
       <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#00F0FF]/10 rounded-full blur-3xl pointer-events-none opacity-20" />
       <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#B200FF]/10 rounded-full blur-3xl pointer-events-none opacity-20" />
 
-      <div className="px-6 md:px-12 lg:px-24">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-24">
         {/* Header */}
         <div className="mb-16 md:mb-20">
           <Badge label="Work Experience" variant="primary" />
           <span className="text-[#B200FF] font-mono text-sm tracking-widest mb-4 block uppercase mt-4">
             // Internships & Learning
           </span>
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#00F0FF] to-[#B200FF] tracking-tight mb-4">
             Professional Experience
           </h2>
           <p className="text-white/60 font-light max-w-2xl">
@@ -130,11 +130,11 @@ export default function Experience() {
         </div>
 
         {/* Experience Grid - Updated to CSS Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="grid grid-cols-1 min-[1000px]:grid-cols-2 min-[1200px]:grid-cols-3 gap-4 sm:gap-6 md:gap-6 lg:gap-6 xl:gap-8">
           {experiences.map((exp) => (
             <motion.div
               key={exp.id}
-              className="experience-card group relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-6 md:p-8 hover:border-white/50 transition-all duration-500 overflow-hidden flex flex-col h-full"
+              className="experience-card group relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-4 sm:p-5 md:p-6 hover:border-white/50 transition-all duration-300 overflow-hidden flex flex-col h-full"
               style={{
                 boxShadow: `0 0 40px ${exp.color}15, inset 0 0 20px ${exp.color}10`,
               }}
@@ -149,13 +149,13 @@ export default function Experience() {
               />
 
               {/* Content */}
-              <div className="relative z-10 flex flex-col flex-grow">
+              <div className="relative z-10 flex flex-col grow">
                 <div className="flex flex-col gap-4">
                   {/* Left side - Position and Company */}
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <FaBriefcase className="text-[#00F0FF]" size={16} />
-                      <h3 className="text-xl md:text-2xl font-black text-white leading-tight">
+                      <h3 className="text-lg sm:text-xl md:text-2xl font-black text-white leading-tight">
                         {exp.position}
                       </h3>
                     </div>
@@ -190,7 +190,10 @@ export default function Experience() {
                   </div>
 
                   <div className="flex items-center gap-3">
-                    <FaMapMarkerAlt size={14} className="text-white/40 shrink-0" />
+                    <FaMapMarkerAlt
+                      size={14}
+                      className="text-white/40 shrink-0"
+                    />
                     <span className="text-sm text-white/60 line-clamp-1">
                       {exp.location}
                     </span>
@@ -207,6 +210,22 @@ export default function Experience() {
             </motion.div>
           ))}
         </div>
+
+        {/* Philosophy Quote Section */}
+        <motion.div
+          className="mt-16 md:mt-20 text-center"
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          viewport={{ once: true }}
+        >
+          <p className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white/80 italic leading-relaxed mb-6">
+            "Procrastination is the assassination of all destinations."
+          </p>
+          <p className="text-[#B200FF] font-light text-sm md:text-base tracking-wide">
+            ~ Sumit
+          </p>
+        </motion.div>
 
         {/* Call to Action */}
         <motion.div

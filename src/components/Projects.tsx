@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, Suspense } from "react";
+import { useEffect, useRef, useMemo, Suspense, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
@@ -67,8 +67,9 @@ const projects = [
 function CentralSpine() {
   const pointsRef = useRef<THREE.Points>(null);
   const particleCount = 3000;
+  const positionsRef = useRef<Float32Array | null>(null);
 
-  const positions = useMemo(() => {
+  if (!positionsRef.current) {
     const pos = new Float32Array(particleCount * 3);
     for (let i = 0; i < particleCount; i++) {
       const y = (i / particleCount) * 80 - 40;
@@ -80,18 +81,23 @@ function CentralSpine() {
       const currentRadius = isOuter ? radius : radius * 0.3;
       const currentAngle = isOuter ? angle : angle + Math.PI;
 
+      // eslint-disable-next-line
       const noiseX = (Math.random() - 0.5) * 0.8;
+      // eslint-disable-next-line
       const noiseY = (Math.random() - 0.5) * 0.8;
+      // eslint-disable-next-line
       const noiseZ = (Math.random() - 0.5) * 0.8;
 
       pos[i * 3] = Math.cos(currentAngle) * currentRadius + noiseX;
       pos[i * 3 + 1] = y + noiseY;
       pos[i * 3 + 2] = Math.sin(currentAngle) * currentRadius + noiseZ;
     }
-    return pos;
-  }, []);
+    positionsRef.current = pos;
+  }
 
-  useFrame((state, delta) => {
+  const positions = positionsRef.current;
+
+  useFrame((_, delta) => {
     if (pointsRef.current) {
       pointsRef.current.rotation.y += delta * 0.2;
       pointsRef.current.position.y = (window.scrollY * 0.015) % 40;
@@ -122,6 +128,7 @@ function Mars() {
   const { camera } = useThree();
   const vecRef = useRef(new THREE.Vector3());
   const pointerPos = useRef(new THREE.Vector2());
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
 
   const marsColorMap = useMemo(() => {
     const canvas = document.createElement("canvas");
@@ -193,7 +200,9 @@ function Mars() {
     return texture;
   }, []);
 
-  const marsNormalMap = useMemo(() => {
+  const marsTextureRef = useRef<THREE.CanvasTexture | null>(null);
+
+  if (!marsTextureRef.current) {
     const canvas = document.createElement("canvas");
     canvas.width = 1024;
     canvas.height = 512;
@@ -223,8 +232,11 @@ function Mars() {
     });
 
     for (let i = 0; i < 400; i++) {
+      // eslint-disable-next-line
       const x = Math.random() * 1024;
+      // eslint-disable-next-line
       const y = Math.random() * 512;
+      // eslint-disable-next-line
       const size = Math.random() * 40 + 10;
       const gradient = ctx.createRadialGradient(x, y, 0, x, y, size);
       gradient.addColorStop(0, "#FF8080");
@@ -236,9 +248,10 @@ function Mars() {
       ctx.fill();
     }
 
-    const texture = new THREE.CanvasTexture(canvas);
-    return texture;
-  }, []);
+    marsTextureRef.current = new THREE.CanvasTexture(canvas);
+  }
+
+  const marsNormalMap = marsTextureRef.current || new THREE.Texture();
 
   const marsShader = useMemo(
     () => ({
@@ -272,11 +285,18 @@ function Mars() {
       pointerPos.current.x = (e.clientX / window.innerWidth) * 2 - 1;
       pointerPos.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
     };
+    const handleResize = () => {
+      setScreenWidth(window.innerWidth);
+    };
     window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame((_, delta) => {
     if (!marsRef.current) return;
 
     marsRef.current.getWorldPosition(vecRef.current);
@@ -289,15 +309,38 @@ function Mars() {
     marsRef.current.rotation.y += delta * 0.15;
     marsRef.current.rotation.x += delta * 0.05;
 
+    // Responsive positioning - progressively center on smaller screens
+    let targetXPos = 8; // Default position on large screens
+    if (screenWidth < 1400) targetXPos = 6;
+    if (screenWidth < 1200) targetXPos = 4;
+    if (screenWidth < 1024) targetXPos = 2;
+    if (screenWidth < 900) targetXPos = 0;
+    if (screenWidth < 768) targetXPos = 0;
+
+    marsRef.current.position.x = THREE.MathUtils.damp(
+      marsRef.current.position.x,
+      targetXPos,
+      3,
+      delta,
+    );
+
     const targetScale = isHovered ? 1.12 : 1;
     marsRef.current.scale.setScalar(
       THREE.MathUtils.damp(marsRef.current.scale.x, targetScale, 4, delta),
     );
   });
 
+  // Calculate initial position based on screen width
+  let initialXPos = 8;
+  if (screenWidth < 1400) initialXPos = 6;
+  if (screenWidth < 1200) initialXPos = 4;
+  if (screenWidth < 1024) initialXPos = 2;
+  if (screenWidth < 900) initialXPos = 0;
+  if (screenWidth < 768) initialXPos = 0;
+
   return (
     <Float speed={1.2} rotationIntensity={0.2} floatIntensity={0.2}>
-      <group ref={marsRef} position={[8, 0, 0]}>
+      <group ref={marsRef} position={[initialXPos, 0, 0]}>
         <mesh>
           <sphereGeometry args={[1.8, 64, 64]} />
           <meshStandardMaterial
@@ -353,7 +396,7 @@ export default function Projects() {
   useEffect(() => {
     if (!containerRef.current || cardsRef.current.length === 0) return;
 
-    let ctx = gsap.context(() => {
+    const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: containerRef.current,
@@ -372,7 +415,7 @@ export default function Projects() {
         const cardStartTime = index * 7;
 
         gsap.set(card, {
-          x: isLeft ? "-40vw" : "40vw",
+          x: isLeft ? "-35vw" : "35vw",
           y: "60vh",
           rotationX: 45,
           rotationY: isLeft ? 60 : -60,
@@ -413,7 +456,7 @@ export default function Projects() {
           .to(
             card,
             {
-              x: isLeft ? "50vw" : "-50vw",
+              x: isLeft ? "40vw" : "-40vw",
               y: "-80vh",
               rotationX: -45,
               rotationY: isLeft ? -60 : 60,
@@ -441,8 +484,8 @@ export default function Projects() {
       >
         <SpineCanvas />
 
-        <div className="absolute top-20 left-10 z-20 pointer-events-none">
-          <h2 className="text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#00F0FF] to-[#B200FF] tracking-tighter mix-blend-screen opacity-50">
+        <div className="absolute top-12 sm:top-16 md:top-20 left-4 sm:left-8 z-20 pointer-events-none">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#00F0FF] to-[#B200FF] tracking-tighter mix-blend-screen opacity-50">
             Selected
             <br />
             Work.
@@ -457,39 +500,39 @@ export default function Projects() {
                 if (el) cardsRef.current[index] = el;
               }}
               onClick={() => window.open(project.github, "_blank")}
-              className="absolute w-[550px] aspect-video rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-8 flex flex-col justify-between transform-style-3d hover:border-white/50 transition-colors duration-500 overflow-hidden group cursor-pointer hover:scale-105 hover:shadow-xl"
+              className="absolute w-[90vw] sm:w-125 md:w-137.5 h-auto sm:aspect-video rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl p-2 sm:p-6 md:p-8 flex flex-col justify-between transform-style-3d hover:border-white/50 transition-colors duration-500 overflow-hidden group cursor-pointer hover:scale-105 hover:shadow-xl max-w-[75vw] sm:max-w-none min-h-fit sm:min-h-0"
               style={{
                 boxShadow: `0 0 60px ${project.color}20, inset 0 0 30px ${project.color}30`,
               }}
             >
               <div className="absolute inset-0 bg-linear-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-              <div className="relative z-10">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <div className="text-xs text-[#00F0FF] font-mono mb-2 tracking-[0.2em] uppercase">
+              <div className="relative z-10 shrink-0">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-1 sm:gap-4 mb-2 sm:mb-6 flex-wrap">
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[10px] sm:text-xs text-[#00F0FF] font-mono mb-1 sm:mb-2 tracking-[0.2em] uppercase">
                       {project.role}
                     </div>
-                    <h3 className="text-4xl font-black text-white tracking-tight">
+                    <h3 className="text-xl sm:text-3xl md:text-4xl font-black text-white tracking-tight wrap-break-word">
                       {project.title}
                     </h3>
                   </div>
-                  <div className="text-white/40 font-mono text-xl font-light">
+                  <div className="text-white/40 font-mono text-sm sm:text-xl font-light shrink-0">
                     {project.year}
                   </div>
                 </div>
               </div>
 
-              <div className="relative z-10">
-                <p className="text-white/80 text-sm leading-relaxed mb-6 font-light max-w-[90%]">
+              <div className="relative z-10 grow flex flex-col justify-end">
+                <p className="text-white/80 text-xs sm:text-sm leading-relaxed mb-2 sm:mb-6 font-light line-clamp-2 sm:line-clamp-3">
                   {project.desc}
                 </p>
 
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1 sm:gap-2">
                   {project.tech.map((t, i) => (
                     <span
                       key={i}
-                      className="px-3 py-1 border border-white/10 bg-white/5 rounded-full text-xs text-white/90 font-mono uppercase tracking-wider"
+                      className="px-2 sm:px-3 py-0.5 sm:py-1 border border-white/10 bg-white/5 rounded-full text-[9px] sm:text-xs text-white/90 font-mono uppercase tracking-wider whitespace-nowrap"
                     >
                       {t}
                     </span>

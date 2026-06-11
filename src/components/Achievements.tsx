@@ -69,7 +69,7 @@ const achievements = [
     date: "Jun 2026",
     description:
       "SQL Basic Certification from HackerRank demonstrating proficiency in SQL fundamentals and database queries.",
-    image: "/sql_basic.jepg.jpeg",
+    image: "/sql_basic.jpeg",
     url: "https://www.hackerrank.com/certificates/49ac28ba99c3",
     credentialId: "49AC28BA99C3",
     color: "#B200FF",
@@ -122,12 +122,12 @@ export default function Achievements() {
           opacity: 0,
           y: 50,
           scale: 0.9,
-          duration: 0.8,
-          delay: index * 0.15,
+          duration: 0.5,
+          delay: index * 0.08,
           ease: "power3.out",
           scrollTrigger: {
             trigger: card as HTMLElement,
-            start: "top 80%",
+            start: "top 85%",
             once: true,
           },
         });
@@ -144,11 +144,11 @@ export default function Achievements() {
       className="relative w-full bg-transparent overflow-hidden z-10 py-20 md:py-32"
     >
       {/* Header */}
-      <div className="px-6 md:px-12 lg:px-24 mb-16 md:mb-20">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-24 mb-16 md:mb-20">
         <span className="text-[#B200FF] font-mono text-sm tracking-widest mb-4 block uppercase">
           // Achievements & Certifications
         </span>
-        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight mb-4">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-[#00F0FF] to-[#B200FF] tracking-tight mb-4">
           Recognition & Growth
         </h2>
         <p className="text-white/60 font-light max-w-2xl">
@@ -158,8 +158,8 @@ export default function Achievements() {
       </div>
 
       {/* Achievements Grid */}
-      <div className="px-6 md:px-12 lg:px-24">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div className="px-4 sm:px-6 md:px-12 lg:px-24">
+        <div className="grid grid-cols-1 md:grid-cols-2 min-[1200px]:grid-cols-3! gap-4 sm:gap-6 md:gap-8">
           {achievements.map((achievement) => {
             const isClickable = achievement.url && achievement.url !== "";
             const Component = isClickable ? "a" : "div";
@@ -175,13 +175,13 @@ export default function Achievements() {
               <Component
                 key={achievement.id}
                 {...componentProps}
-                className="achievement-card group relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl overflow-hidden hover:border-white/50 transition-all duration-500 cursor-pointer hover:shadow-xl h-full flex flex-col"
+                className="achievement-card group relative rounded-2xl border border-white/20 bg-black/40 backdrop-blur-xl overflow-hidden hover:border-white/50 transition-all duration-300 cursor-pointer hover:shadow-xl h-full flex flex-col"
                 style={{
                   boxShadow: `0 0 40px ${achievement.color}15, inset 0 0 20px ${achievement.color}10`,
                 }}
               >
                 {/* Image Container */}
-                <div className="relative w-full h-40 overflow-hidden bg-gradient-to-b from-black/50 to-black/80 flex-shrink-0">
+                <div className="relative w-full h-32 sm:h-36 md:h-40 overflow-hidden bg-linear-to-b from-black/50 to-black/80 shrink-0">
                   <img
                     src={achievement.image}
                     alt={achievement.title}
@@ -198,13 +198,13 @@ export default function Achievements() {
                 </div>
 
                 {/* Content Container */}
-                <div className="p-6 relative z-10 flex flex-col flex-grow">
+                <div className="p-4 sm:p-5 md:p-6 relative z-10 flex flex-col grow">
                   {/* Hover Gradient Background */}
                   <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                  <div className="relative z-10 flex flex-col flex-grow">
+                  <div className="relative z-10 flex flex-col grow">
                     {/* Title */}
-                    <h3 className="text-xl font-black text-white tracking-tight mb-2">
+                    <h3 className="text-lg sm:text-lg md:text-xl font-black text-white tracking-tight mb-2">
                       {achievement.title}
                     </h3>
 
@@ -214,7 +214,7 @@ export default function Achievements() {
                     </p>
 
                     {/* Description */}
-                    <p className="text-sm text-white/60 leading-relaxed mb-4 line-clamp-3 flex-grow">
+                    <p className="text-sm text-white/60 leading-relaxed mb-4 line-clamp-3 grow">
                       {achievement.description}
                     </p>
 

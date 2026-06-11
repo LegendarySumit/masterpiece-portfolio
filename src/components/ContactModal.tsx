@@ -27,10 +27,10 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-md"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-[90vw] sm:max-w-md"
           >
             <div
-              className="relative rounded-2xl border border-white/20 bg-gradient-to-br from-black/80 to-black/60 backdrop-blur-xl p-8 overflow-hidden"
+              className="relative rounded-2xl border border-white/20 bg-linear-to-br from-black/80 to-black/60 backdrop-blur-xl p-6 sm:p-8 overflow-hidden"
               style={{
                 boxShadow: `0 0 60px rgba(0, 240, 255, 0.15), inset 0 0 30px rgba(178, 0, 255, 0.08)`,
               }}
@@ -42,16 +42,17 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               {/* Close Button */}
               <motion.button
                 onClick={onClose}
-                className="absolute top-4 right-4 p-2 rounded-full hover:bg-white/10 transition-colors"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-[#00F0FF] focus:ring-offset-2 focus:ring-offset-black"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
+                aria-label="Close modal"
               >
                 <FiX size={20} className="text-white" />
               </motion.button>
 
               <div className="relative z-10">
                 {/* Header */}
-                <h2 className="text-3xl font-black text-white mb-2">
+                <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">
                   Get In Touch
                 </h2>
                 <p className="text-white/60 text-sm mb-8">
@@ -59,15 +60,15 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </p>
 
                 {/* Contact Items */}
-                <div className="space-y-4 mb-8">
+                <div className="space-y-3 sm:space-y-4 mb-8">
                   {/* Phone */}
                   <motion.a
                     href="tel:+919668393503"
-                    className="flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[#00F0FF]/50 bg-white/5 hover:bg-white/10 transition-all duration-300 group"
+                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-white/10 hover:border-[#00F0FF]/50 bg-white/5 hover:bg-white/10 transition-all duration-300 group"
                     whileHover={{ scale: 1.02, x: 5 }}
                   >
-                    <div className="p-3 rounded-lg bg-[#00F0FF]/20 group-hover:bg-[#00F0FF]/30 transition-colors">
-                      <FiPhone size={20} className="text-[#00F0FF]" />
+                    <div className="p-2 sm:p-3 rounded-lg bg-[#00F0FF]/20 group-hover:bg-[#00F0FF]/30 transition-colors shrink-0">
+                      <FiPhone size={18} className="text-[#00F0FF]" />
                     </div>
                     <div className="flex-1">
                       <p className="text-white/60 text-xs uppercase tracking-wider">
@@ -85,11 +86,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                   {/* Email */}
                   <motion.a
                     href="mailto:prustysumit78@gmail.com"
-                    className="flex items-center gap-4 p-4 rounded-xl border border-white/10 hover:border-[#B200FF]/50 bg-white/5 hover:bg-white/10 transition-all duration-300 group"
+                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl border border-white/10 hover:border-[#B200FF]/50 bg-white/5 hover:bg-white/10 transition-all duration-300 group"
                     whileHover={{ scale: 1.02, x: 5 }}
                   >
-                    <div className="p-3 rounded-lg bg-[#B200FF]/20 group-hover:bg-[#B200FF]/30 transition-colors">
-                      <FiMail size={20} className="text-[#B200FF]" />
+                    <div className="p-2 sm:p-3 rounded-lg bg-[#B200FF]/20 group-hover:bg-[#B200FF]/30 transition-colors shrink-0">
+                      <FiMail size={18} className="text-[#B200FF]" />
                     </div>
                     <div className="flex-1">
                       <p className="text-white/60 text-xs uppercase tracking-wider">
@@ -106,7 +107,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 </div>
 
                 {/* Divider */}
-                <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-8" />
+                <div className="h-px bg-linear-to-r from-transparent via-white/10 to-transparent mb-8" />
 
                 {/* Social Links */}
                 <div>
